@@ -17,6 +17,9 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController newPostController = TextEditingController();
+  File? image;
+  bool formValid = false;
 
   void validateForm() {
     if (formKey.currentState!.validate()) {
@@ -38,9 +41,7 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
-  final TextEditingController newPostController = TextEditingController();
-  File? image;
-  bool formValid = false;
+  
 
   void postMessage() async {
     showDialog(
@@ -69,6 +70,8 @@ class _PostPageState extends State<PostPage> {
 
     try {
       final response = await request.send();
+          Navigator.of(context).pop();
+
 
       if (response.statusCode == 201) {
         // Post created successfully
@@ -170,6 +173,7 @@ class _PostPageState extends State<PostPage> {
                       text: "Choose Image",
                       onTap: chooseImage,
                     ),
+                    const SizedBox(height:20),
                     MyButton(
                       text: "Post",
                       onTap: () {
