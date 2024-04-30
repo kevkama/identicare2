@@ -1,11 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:identicare2/components/my_button.dart';
 import 'package:identicare2/components/my_textfield.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class PostPage extends StatefulWidget {
@@ -30,9 +31,8 @@ class _PostPageState extends State<PostPage> {
   }
 
   void chooseImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? imageFile =
-        await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (imageFile != null) {
       setState(() {
@@ -41,7 +41,10 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
-  
+  String _convertImageToBase64(File imageFile) {
+    final Uint8List bytes = imageFile.readAsBytesSync();
+    return base64Encode(bytes);
+  }
 
   void postMessage() async {
     showDialog(
@@ -52,26 +55,21 @@ class _PostPageState extends State<PostPage> {
     );
 
     final String content = newPostController.text;
-    final String apiUrl =
-        'http://127.0.0.1:8000/api/post'; // Replace with your Laravel API endpoint
+    const String apiUrl = 'http://127.0.0.1:8000/api/post';
 
-    final Map<String, String> data = {
-      'user': '1', // Replace with the user ID from the authenticated user
+    final Map<String, dynamic> data = {
+      'user': '1',
       'content': content,
+      if (image != null) 'image': _convertImageToBase64(image!),
     };
 
-    final request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-    request.fields.addAll(data);
-
-    if (image != null) {
-      final imageFile = await http.MultipartFile.fromPath('image', image!.path);
-      request.files.add(imageFile);
-    }
-
     try {
-      final response = await request.send();
-          Navigator.of(context).pop();
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        body: jsonEncode(data),
+      );
 
+      Navigator.of(context).pop();
 
       if (response.statusCode == 201) {
         // Post created successfully
@@ -115,8 +113,7 @@ class _PostPageState extends State<PostPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Network Error'),
-          content:
-              const Text('An error occurred while connecting to the server.'),
+          content: const Text('An error occurred while connecting to the server.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -173,7 +170,7 @@ class _PostPageState extends State<PostPage> {
                       text: "Choose Image",
                       onTap: chooseImage,
                     ),
-                    const SizedBox(height:20),
+                    const SizedBox(height: 20),
                     MyButton(
                       text: "Post",
                       onTap: () {

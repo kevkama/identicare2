@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:identicare2/components/login_or_signup.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:identicare2/helper_functions/helper_alert_msg.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -24,7 +25,8 @@ class _MyDrawerState extends State<MyDrawer> {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token', // Include the token in the Authorization header
+        'Authorization':
+            'Bearer $token', // Include the token in the Authorization header
       },
     );
 
@@ -37,14 +39,14 @@ class _MyDrawerState extends State<MyDrawer> {
       //print('Token removed from secure storage');
 
       // Navigate to the login screen
-    
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>  const LoginOrSignUp()),
+        MaterialPageRoute(builder: (context) => const LoginOrSignUp()),
       );
     } else {
       // Handle error
-      print('Failed to revoke token: ${response.body}');
+      displayMessageToUser('Failed to revoke token: ${response.body}', context);
     }
   }
 

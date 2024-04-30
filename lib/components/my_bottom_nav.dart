@@ -5,7 +5,8 @@ import 'package:identicare2/screens/homepage.dart';
 import 'package:identicare2/screens/postpage.dart';
 
 class MyBottomNav extends StatefulWidget {
-  const MyBottomNav({super.key});
+  final int userId;
+  const MyBottomNav({super.key, required this.userId});
 
   @override
   State<MyBottomNav> createState() => _MyBottomNavState();
@@ -17,7 +18,7 @@ class _MyBottomNavState extends State<MyBottomNav> {
     const HomePage(),
     const PostPage(),
     const HomePage(),
-    const AccountSettings(),
+    const AccountSettings(userId: widget.userId),
   ];
   @override
   Widget build(BuildContext context) {

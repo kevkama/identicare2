@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison
+
 import 'package:app_bar_with_search_switch/app_bar_with_search_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:identicare2/components/my_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:identicare2/helper_functions/helper_alert_msg.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +15,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> { 
+class _HomePageState extends State<HomePage> {
   List<Post> posts = [];
 
   @override
@@ -22,7 +25,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> fetchPosts() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/post'));
+    final response =
+        await http.get(Uri.parse('http://127.0.0.1:8000/api/post'));
     if (response.statusCode == 200) {
       final List<dynamic> postsJson = jsonDecode(response.body);
       setState(() {
@@ -30,12 +34,14 @@ class _HomePageState extends State<HomePage> {
       });
     } else {
       // Handle error
-      print('Failed to load posts');
+      displayMessageToUser('Failed to load posts', context);
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(         
+    print('Posts: $posts');
+    return Scaffold(
       appBar: AppBarWithSearchSwitch(appBarBuilder: (context) {
         return AppBar(
           title: const Row(
@@ -59,30 +65,45 @@ class _HomePageState extends State<HomePage> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
-                return ListTile(
-                  title: Text(post.content),
-                  subtitle: Text('User ID: ${post.userId}'),
-                  leading: CircleAvatar(
-                    // ignore: unnecessary_null_comparison
-                    backgroundImage: post.image != null
-                        ? NetworkImage(post.image)
-                        : const AssetImage('assets/no-image.png')
-                            as ImageProvider,
-                  ),
-                  onTap: () {
-                    // Handle post tap
-                  },
+                return Column(
+                  children: [
+                    Card(
+                      child: Image(
+                        width: double.infinity,
+                        image: post.image != null
+                            ? NetworkImage('http://127.0.0.1:8000/storage/${post.image}')
+                            : const AssetImage('assets/no-image.png')
+                                as ImageProvider,
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(post.name),
+                      subtitle: Text(post.content),
+                      leading: CircleAvatar(
+                        backgroundImage: post.image != null
+                            ? NetworkImage(
+                                'http://127.0.0.1:8000/storage/${post.image}')
+                            : const AssetImage('assets/no-image.png')
+                                as ImageProvider,
+                      ),
+                      onTap: () {
+                        // Handle post tap
+                      },
+                    ),
+                  ],
                 );
               },
             ),
     );
   }
 }
+
 class Post {
   final int id;
   final int userId;
   final String content;
   final String image;
+  final String name;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -93,14 +114,17 @@ class Post {
     required this.image,
     required this.createdAt,
     required this.updatedAt,
+    required this.name,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       id: json['id'],
       userId: json['user'],
-      content: json['content'],
-      image: json['image'],
+      content: json['content'] ?? '',
+      name: json['name'],
+      image: json['image'] ??
+          'https://via.placeholder.com/150',
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
