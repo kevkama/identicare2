@@ -1,12 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:identicare2/screens/account_settings.dart';
+import 'package:identicare2/screens/chatscreen.dart';
 import 'package:identicare2/screens/homepage.dart';
 import 'package:identicare2/screens/postpage.dart';
 
 class MyBottomNav extends StatefulWidget {
-  final int userId;
-  const MyBottomNav({super.key, required this.userId});
+  const MyBottomNav({super.key});
 
   @override
   State<MyBottomNav> createState() => _MyBottomNavState();
@@ -17,8 +17,8 @@ class _MyBottomNavState extends State<MyBottomNav> {
   final List<Widget> pages = [
     const HomePage(),
     const PostPage(),
-    const HomePage(),
-    const AccountSettings(userId: widget.userId),
+    const ChatScreen(),
+    const AccountSettings(),
   ];
   @override
   Widget build(BuildContext context) {

@@ -54,127 +54,130 @@ class _MyDrawerState extends State<MyDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.background,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // header
-          Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-
-                  // navigate to users
-                  Navigator.pushNamed(context, '/profile');
-                },
-                child: const DrawerHeader(
-                  child: Icon(Icons.favorite),
-                ),
-              ),
-
-              // home tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  leading: const Icon(Icons.home),
-                  title: const Text("H O M E"),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // header
+            Column(
+              children: [
+                GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-
-              // user tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  leading: const Icon(Icons.group),
-                  title: const Text("U S E R S"),
-                  onTap: () {
-                    Navigator.pop(context);
-
+        
                     // navigate to users
-                    Navigator.pushNamed(context, '/users');
+                    Navigator.pushNamed(context, '/profile');
                   },
+                  child: const DrawerHeader(
+                    child: Icon(Icons.favorite),
+                  ),
                 ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              // Communities tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  leading: const Icon(Icons.group),
-                  title: const Text("C O M M U N I T I E S"),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    // navigate to users
-                    Navigator.pushNamed(context, '/users');
-                  },
+        
+                // home tile
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    leading: const Icon(Icons.home),
+                    title: const Text("H O M E"),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              // Communities tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  leading: const Icon(Icons.group),
-                  title: const Text("EVENTS &  CHARITIES"),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    // navigate to users
-                    Navigator.pushNamed(context, '/users');
-                  },
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              // Communities tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  leading: const Icon(Icons.group),
-                  title: const Text("TELEHEALTH"),
-                  onTap: () {
-                    Navigator.pop(context);
-
-                    // navigate to users
-                    Navigator.pushNamed(context, '/users');
-                  },
+        
+                // user tile
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    leading: const Icon(Icons.group),
+                    title: const Text("U S E R S"),
+                    onTap: () {
+                      Navigator.pop(context);
+        
+                      // navigate to users
+                      Navigator.pushNamed(context, '/users');
+                    },
+                  ),
                 ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-            ],
-          ),
-
-          // logout
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0, bottom: 25),
-            child: ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("L O G O U T"),
-              onTap: logout,
+        
+                const SizedBox(
+                  height: 20,
+                ),
+        
+                // Communities tile
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    leading: const Icon(Icons.group),
+                    title: const Text("C O M M U N I T I E S"),
+                    onTap: () {
+                      Navigator.pop(context);
+        
+                      // navigate to users
+                      Navigator.pushNamed(context, '/users');
+                    },
+                  ),
+                ),
+        
+                const SizedBox(
+                  height: 20,
+                ),
+        
+                // Communities tile
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    leading: const Icon(Icons.group),
+                    title: const Text("EVENTS &  CHARITIES"),
+                    onTap: () {
+                      Navigator.pop(context);
+        
+                      // navigate to users
+                      Navigator.pushNamed(context, '/users');
+                    },
+                  ),
+                ),
+        
+                const SizedBox(
+                  height: 20,
+                ),
+        
+                // Communities tile
+                Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: ListTile(
+                    leading: const Icon(Icons.group),
+                    title: const Text("TELEHEALTH"),
+                    onTap: () {
+                      Navigator.pop(context);
+        
+                      // navigate to users
+                      Navigator.pushNamed(context, '/users');
+                    },
+                  ),
+                ),
+        
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-          )
-        ],
+        
+            // logout
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0, bottom: 25),
+              child: ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text("L O G O U T"),
+                onTap: logout,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

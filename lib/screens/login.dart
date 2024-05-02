@@ -9,10 +9,11 @@ import 'package:identicare2/components/my_button.dart';
 import 'package:identicare2/components/my_textfield.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lottie/lottie.dart';
 
 class Login extends StatefulWidget {
   final void Function()? onTap;
-  // the textediting controller
+ 
 
   const Login({super.key, required this.onTap});
 
@@ -38,75 +39,91 @@ class _LoginState extends State<Login> {
 
 
 
-void login() async {
-  showDialog(
-    context: context,
-    builder: (context) => const Center(
-      child: CircularProgressIndicator(),
-    ),
-  );
-
-  final String email = emailController.text;
-  final String password = passwordController.text;
-
-  final response = await loginUser(email, password);
-
-  // Hide the progress indicator
-  Navigator.of(context).pop();
-
-  if (response.statusCode == 201) {
-    // Registration successful
-    final responseData = jsonDecode(response.body);
-    final token = responseData['token'];
-
-    // Store the token in Flutter Secure Storage
-    await widget.storage.write(key: 'token', value: token);
-
-    // Print a success message in the console
-    // print('Token stored successfully');
-
+void showLoadingDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Login Successful'),
-        content: const Text('You have successfully Logged in.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        const MyBottomNav()), //the import of your screen
-              );
-            },
-            child: const Text('OK'),
+      barrierDismissible: false, 
+      builder: (context) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              LottieBuilder.asset(
+                'assets/images/login_load.json',
+                height: 200,
+                width: 200,
+              ),
+              const SizedBox(height: 16),
+              const Text('Anytime Now...'),
+            ],
           ),
-        ],
-      ),
-    );
-  } else {
-    // Registration failed
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Login Failed'),
-        content: Text('Error: ${response.body}'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'OK',
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
-}
+
+  void dismissLoadingDialog() {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  void login() async {
+    showLoadingDialog();
+
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    final response = await loginUser(email, password);
+
+    dismissLoadingDialog();
+
+    if (response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+      final token = responseData['token'];
+
+      await widget.storage.write(key: 'token', value: token);
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Successful'),
+          content: const Text('You have successfully Logged in.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyBottomNav(),
+                  ),
+                );
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Failed'),
+          content: Text('Error: ${response.body}'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
 
   Future<http.Response> loginUser(
@@ -114,7 +131,7 @@ void login() async {
     String password,
   ) async {
     const String apiUrl =
-        'http://127.0.0.1:8000/api/login'; // Replace with your Laravel API endpoint
+        'http://127.0.0.1:8000/api/login'; 
 
     final Map<String, String> data = {
       'email': email,
@@ -144,7 +161,7 @@ void login() async {
               padding: const EdgeInsets.all(25.0),
               child: Column(
                 children: [
-                  // logo
+                 
                   Icon(
                     Icons.person,
                     size: 80,
@@ -155,7 +172,7 @@ void login() async {
                     height: 25,
                   ),
 
-                  // app name
+                  
                   const Text(
                     "IDENTICARE",
                     style: TextStyle(fontSize: 20),
@@ -165,7 +182,7 @@ void login() async {
                     height: 50,
                   ),
 
-                  // email textfield
+                  
                   MyTextField(
                     hintText: "E-mail",
                     labelText: "E-mail",
@@ -179,7 +196,7 @@ void login() async {
                     height: 10,
                   ),
 
-                  // password textfield
+                
 
                   MyTextField(
                     hintText: "Password",
@@ -198,7 +215,7 @@ void login() async {
                     height: 10,
                   ),
 
-                  // forgot password tap  text
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -230,7 +247,7 @@ void login() async {
                     height: 10,
                   ),
 
-                  // don't have an account register tap text
+                  
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

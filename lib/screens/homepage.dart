@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('Posts: $posts');
     return Scaffold(
       appBar: AppBarWithSearchSwitch(appBarBuilder: (context) {
         return AppBar(

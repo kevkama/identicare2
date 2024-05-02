@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/homepage': (context) => const HomePage(),
         '/forgot_password': (context) => const ForgotPasswordPage(),
         '/bottomnav':(context) => const MyBottomNav(),
+        '/loginOrSignUp' :(context) => const LoginOrSignUp()
       },
     );
   }
